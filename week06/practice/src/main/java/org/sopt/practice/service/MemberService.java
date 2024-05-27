@@ -43,7 +43,10 @@ public class MemberService {
         String accessToken = jwtTokenProvider.issueAccessToken(
             UserAuthentication.createUserAuthentication(memberId)
         );
-        return UserJoinResponse.of(accessToken, memberId.toString());
+        String refreshToken = jwtTokenProvider.issueRefreshToken(
+            UserAuthentication.createUserAuthentication(memberId)
+        );
+        return UserJoinResponse.of(accessToken,refreshToken, memberId.toString());
     }
 
     public MemberFindDto findMemberById(Long memberId) {

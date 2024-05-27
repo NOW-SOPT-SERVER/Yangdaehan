@@ -21,6 +21,7 @@ public class BlogController {
     private final BlogService blogService;
 
 
+
     @PatchMapping("/blog/{blogId}/title")
     public ResponseEntity updateBlogTitle(
             @PathVariable Long blogId,

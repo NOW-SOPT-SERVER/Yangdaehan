@@ -22,14 +22,36 @@ public class JwtTokenProvider {
 
     private static final String USER_ID = "userId";
 
-    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000L * 14;
+    private static final int ACCESS_TOKEN_EXPIRATION_TIME = 43200000; // 12시간
+    private static final int REFRESH_TOKEN_EXPIRATION_TIME = 604800000; // 7일
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
 
 
+
+    public String issueRefreshToken(Authentication authentication) {
+        return issueToken(authentication, (long) REFRESH_TOKEN_EXPIRATION_TIME);
+    }
+
+
     public String issueAccessToken(final Authentication authentication) {
-        return generateToken(authentication, ACCESS_TOKEN_EXPIRATION_TIME);
+        return generateToken(authentication, (long) ACCESS_TOKEN_EXPIRATION_TIME);
+    }
+
+    private String issueToken(Authentication authentication, Long refreshTokenExpirationTime) {
+        final Date now = new Date();
+        final Claims claims = Jwts.claims()
+            .setIssuedAt(now)
+            .setExpiration(new Date(now.getTime() + refreshTokenExpirationTime));      // 만료 시간
+
+        claims.put(USER_ID, authentication.getPrincipal());
+        return Jwts.builder()
+            .setHeaderParam(Header.TYPE, Header.JWT_TYPE) // Header
+            .setClaims(claims) // Claim
+            .signWith(getSigningKey()) // Signature
+            .compact();
+
     }
 
 
