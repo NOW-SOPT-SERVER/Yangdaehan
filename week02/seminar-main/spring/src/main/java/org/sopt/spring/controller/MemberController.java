@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,6 +42,11 @@ public class MemberController {
     public ResponseEntity deleteMemberById(@PathVariable Long memberId){
         memberService.deleteMemberById(memberId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MemberFindDto>> getAllMembers() {
+        return ResponseEntity.ok(memberService.getAllMembers());
     }
 
 }
