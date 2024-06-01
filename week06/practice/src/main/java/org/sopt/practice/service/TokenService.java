@@ -33,11 +33,4 @@ public class TokenService {
         throw new RuntimeException("Invalid or expired tokens");
     }
 
-    public void storeRefreshToken(Long memberId, String refreshToken) {
-        Token token = Token.builder()
-            .id(memberId)
-            .refreshToken(refreshToken)
-            .build();
-        redisTokenRepository.save(token);
-    }
 }
