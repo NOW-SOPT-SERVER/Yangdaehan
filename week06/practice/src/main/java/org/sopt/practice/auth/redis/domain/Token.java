@@ -1,32 +1,39 @@
-/*
 package org.sopt.practice.auth.redis.domain;
+
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
+
+@RedisHash(value = "", timeToLive = 60 * 60 * 24 * 1000L * 14)
+@AllArgsConstructor
+@Getter
+@Builder
 public class Token {
 
-    @RedisHash(value = "", timeToLive = 60 * 60 * 24 * 1000L * 14)
+    @Id
+    private Long id;
 
-    public class Token{
+    @Indexed
+    private String refreshToken;
 
-        @Id
-        private Long id;
-
-        @Index()
-        private String refreshToken;
-
-        public static Token of(
-            final Long id;
-            final String RefreshToken;
-        ){
-            return Token.builder()
-                .id(id)
-                .refreshToken(refreshToken)
-                .build();
-        }
+    private static Token of(
+        final Long id,
+        final String refreshToken
+    ) {
+        return Token.builder()
+            .id(id)
+            .refreshToken(refreshToken)
+            .build();
     }
 
+
+
+
+
 }
-*/

@@ -5,11 +5,13 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.sopt.practice.auth.UserAuthentication;
+import org.sopt.practice.auth.redis.domain.Token;
 import org.sopt.practice.common.dto.ErrorMessage;
 import org.sopt.practice.common.jwt.JwtTokenProvider;
 import org.sopt.practice.domain.Member;
 import org.sopt.practice.exception.NotFoundException;
 import org.sopt.practice.repository.MemberRepository;
+import org.sopt.practice.repository.RedisTokenRepository;
 import org.sopt.practice.service.dto.MemberCreateDto;
 import org.sopt.practice.service.dto.MemberFindDto;
 import org.sopt.practice.service.dto.UserJoinResponse;
@@ -22,15 +24,8 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTokenRepository redisTokenRepository;
 
-    //    @Transactional
-//    public String createMember(
-//            MemberCreateDto memberCreateDto
-//    ) {
-//        Member member = Member.create(memberCreateDto.name(), memberCreateDto.part(), memberCreateDto.age());
-//        memberRepository.save(member);
-//        return member.getId().toString();
-//    }
 
     @Transactional
     public UserJoinResponse createMember(
@@ -40,12 +35,21 @@ public class MemberService {
             Member.create(memberCreate.name(), memberCreate.part(), memberCreate.age())
         );
         Long memberId = member.getId();
+
         String accessToken = jwtTokenProvider.issueAccessToken(
             UserAuthentication.createUserAuthentication(memberId)
         );
         String refreshToken = jwtTokenProvider.issueRefreshToken(
             UserAuthentication.createUserAuthentication(memberId)
         );
+
+        // Redis에 refresh token 저장
+        Token token = Token.builder()
+            .id(memberId)
+            .refreshToken(refreshToken)
+            .build();
+        redisTokenRepository.save(token);
+
         return UserJoinResponse.of(accessToken,refreshToken, memberId.toString());
     }
 
