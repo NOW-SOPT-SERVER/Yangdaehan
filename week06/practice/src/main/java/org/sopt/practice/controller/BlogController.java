@@ -32,12 +32,12 @@ public class BlogController {
     }
 
     private final PrincipalHandler principalHandler;
-
+/*
     @PostMapping("/blog")
     public ResponseEntity createBlog(
         BlogCreateRequest blogCreateRequest
     ) {
         return ResponseEntity.created(URI.create(blogService.create(
             principalHandler.getUserIdFromPrincipal(), blogCreateRequest))).build();
-    }
+    }*/
 }

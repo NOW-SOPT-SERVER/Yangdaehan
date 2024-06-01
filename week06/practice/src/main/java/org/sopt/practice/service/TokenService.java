@@ -12,12 +12,10 @@ import java.util.Optional;
 public class TokenService {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserAuthenticationService userAuthenticationService;
     private final RedisTokenRepository redisTokenRepository;
 
-    public TokenService(JwtTokenProvider jwtTokenProvider, UserAuthenticationService userAuthenticationService, RedisTokenRepository redisTokenRepository) {
+    public TokenService(JwtTokenProvider jwtTokenProvider, RedisTokenRepository redisTokenRepository) {
         this.jwtTokenProvider = jwtTokenProvider;
-        this.userAuthenticationService = userAuthenticationService;
         this.redisTokenRepository = redisTokenRepository;
     }
 

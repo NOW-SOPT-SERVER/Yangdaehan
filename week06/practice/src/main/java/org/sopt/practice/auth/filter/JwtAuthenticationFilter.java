@@ -1,7 +1,5 @@
 package org.sopt.practice.auth.filter;
 
-import static org.sopt.practice.common.jwt.JwtValidationType.VALID_JWT;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,11 +25,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+        @NonNull HttpServletResponse response,
+        @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
             final String token = getJwtFromRequest(request);
-            if (jwtTokenProvider.validateToken(token) == VALID_JWT) {
+            if (token != null && jwtTokenProvider.validateToken(token)) {
                 Long memberId = jwtTokenProvider.getUserFromJwt(token);
                 UserAuthentication authentication = UserAuthentication.createUserAuthentication(memberId);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
