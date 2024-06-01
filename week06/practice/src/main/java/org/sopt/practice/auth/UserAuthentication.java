@@ -1,11 +1,9 @@
 package org.sopt.practice.auth;
-
-import java.util.Collection;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Service;
 
-@Service
+import java.util.Collection;
+
 public class UserAuthentication extends UsernamePasswordAuthenticationToken {
 
     public UserAuthentication(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {

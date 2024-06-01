@@ -22,10 +22,10 @@ public class Token {
     @Indexed
     private String refreshToken;
 
-    private static Token of(
+    public static Token of(
         final Long id,
         final String refreshToken
-    ) {
+    ){
         return Token.builder()
             .id(id)
             .refreshToken(refreshToken)

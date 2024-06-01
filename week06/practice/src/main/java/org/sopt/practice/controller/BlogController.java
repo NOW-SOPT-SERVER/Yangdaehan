@@ -20,7 +20,13 @@ public class BlogController {
 
     private final BlogService blogService;
 
-
+    @PostMapping("/blog")
+    public ResponseEntity createBlog(
+        @ModelAttribute BlogCreateRequest blogCreateRequest
+    ) {
+        return ResponseEntity.created(URI.create(blogService.create(
+            principalHandler.getUserIdFromPrincipal(), blogCreateRequest))).build();
+    }
 
     @PatchMapping("/blog/{blogId}/title")
     public ResponseEntity updateBlogTitle(

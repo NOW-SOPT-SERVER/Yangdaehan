@@ -1,6 +1,8 @@
 package org.sopt.practice.controller;
 
 import lombok.RequiredArgsConstructor;
+
+import org.sopt.practice.auth.PrincipalHandler;
 import org.sopt.practice.service.MemberService;
 import org.sopt.practice.service.dto.MemberCreateDto;
 import org.sopt.practice.service.dto.MemberFindDto;
@@ -13,7 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RestController;
+
+import java.net.URI;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,22 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
-
-//    @PostMapping
-//    public ResponseEntity createMember(@RequestBody MemberCreateDto memberCreate) {
-//        return ResponseEntity.created(URI.create(memberService.createMember(memberCreate))).build();
-//    }
-
-    @GetMapping("/{memberId}")
-    public ResponseEntity<MemberFindDto> findMemberById(@PathVariable Long memberId){
-        return  ResponseEntity.ok(memberService.findMemberById(memberId));
-    }
-
-    @DeleteMapping("/{memberId}")
-    public ResponseEntity deleteMemberById(@PathVariable Long memberId){
-        memberService.deleteMemberById(memberId);
-        return ResponseEntity.noContent().build();
-    }
+    private final PrincipalHandler principalHandler;
 
     @PostMapping
     public ResponseEntity<UserJoinResponse> postMember(
@@ -45,6 +35,35 @@ public class MemberController {
         UserJoinResponse userJoinResponse = memberService.createMember(memberCreate);
         return ResponseEntity.status(HttpStatus.CREATED)
             .header("Location", userJoinResponse.userId())
-            .body(userJoinResponse);
+            .body(
+                userJoinResponse
+            );
     }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<MemberFindDto> findMemberById(@PathVariable Long memberId) {
+        return ResponseEntity.ok(memberService.findMemberById(memberId));
+    }
+
+    @DeleteMapping("/{memberId}")
+    public ResponseEntity deleteMemberById(@PathVariable Long memberId){
+        memberService.deleteMemberById(memberId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<UserJoinResponse> refreshToken(){
+        UserJoinResponse userJoinResponse = memberService.refreshToken(
+            principalHandler.getUserIdFromPrincipal()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .header("Location", userJoinResponse.userId())
+            .body(
+                userJoinResponse
+            );
+    }
+
+
+
+
 }
