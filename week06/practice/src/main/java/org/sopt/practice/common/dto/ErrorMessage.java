@@ -13,9 +13,9 @@ public enum ErrorMessage {
 
     JWT_UNAUTHORIZED_EXCEPTION(HttpStatus.UNAUTHORIZED.value(), "사용자의 로그인 검증을 실패했습니다."),
 
-    FORBIDDEN_MEMBER_ACCESS(HttpStatus.FORBIDDEN.value(), "이 멤버는 해당 블로그에 대한 접근 권한이 없습니다.")
+    FORBIDDEN_MEMBER_ACCESS(HttpStatus.FORBIDDEN.value(), "이 멤버는 해당 블로그에 대한 접근 권한이 없습니다."),
 
-    ;
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 refresh 토큰입니다.");
     private final int status;
 
     private final String message;

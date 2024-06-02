@@ -1,20 +1,14 @@
 package org.sopt.practice.common.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import java.util.Base64;
-import java.util.Date;
-import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
-import org.sopt.practice.common.jwt.JwtValidationType;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import javax.crypto.SecretKey;
+import java.util.Base64;
+import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +16,8 @@ public class JwtTokenProvider {
 
     private static final String USER_ID = "userId";
 
-    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000L * 14;
+    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000L;
+    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 24 * 60 * 60 * 1000L * 14;
 
     @Value("${jwt.secret}")
     private String JWT_SECRET;
@@ -32,6 +27,9 @@ public class JwtTokenProvider {
         return generateToken(authentication, ACCESS_TOKEN_EXPIRATION_TIME);
     }
 
+    public String issueRefreshToken(final Authentication authentication) {
+        return generateToken(authentication, REFRESH_TOKEN_EXPIRATION_TIME);
+    }
 
     public String generateToken(Authentication authentication, Long tokenExpirationTime) {
         final Date now = new Date();
@@ -81,3 +79,4 @@ public class JwtTokenProvider {
         return Long.valueOf(claims.get(USER_ID).toString());
     }
 }
+
