@@ -19,7 +19,6 @@ public class BlogService {
     private final MemberService memberService;
 
 
-    //private final S3Service s3Service;
     private static final String BLOG_S3_UPLOAD_FOLER = "blog/";
 
 
